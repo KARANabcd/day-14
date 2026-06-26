@@ -1,5 +1,5 @@
 const userModel = require('../models/user.model')
-const crypto = require('crypto')
+const bycrypt = require('bycrypt')
 const jwt = require("jsonwebtoken")
 
 
@@ -22,7 +22,7 @@ const jwt = require("jsonwebtoken")
     email ? "Email already exists": "Username already exists")
   })
  }
- const hash = crytpo.createHash('sha256').update(password).digest('hex')
+ const hash = await bycrypt.hash(password , 10)
  const user = await userModel.create({
   username,
   email,
@@ -73,8 +73,8 @@ user:{
     message:"user not found"
   })
  }
- const hash = crytpo.createHash('sha256').update(password).digest('hex')
- const isPasswordValid = hash == user.password;
+
+ const isPasswordValid = await bcrypt.compare(password, user.password)
 
  if(!isPasswordValid){
   return res.status(401).json({
